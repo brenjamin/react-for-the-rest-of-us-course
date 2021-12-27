@@ -2,25 +2,24 @@ import React, { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import Axios from "axios"
 import LoadingDotsIcon from "./LoadingDotsIcon"
-import Post from "./Post"
 
-function ProfilePosts() {
+function ProfileFollowing() {
   const [isLoading, setIsLoading] = useState(true)
-  const [posts, setPosts] = useState([])
+  const [following, setFollowing] = useState([])
   const { username } = useParams()
 
   useEffect(() => {
     const ourRequest = Axios.CancelToken.source()
-    async function fetchPosts() {
+    async function fetchFollowing() {
       try {
-        const response = await Axios.get(`/profile/${username}/posts`, { cancelToken: ourRequest.token })
-        setPosts(response.data)
+        const response = await Axios.get(`/profile/${username}/following`, { cancelToken: ourRequest.token })
+        setFollowing(response.data)
         setIsLoading(false)
       } catch (e) {
         console.log("There was a problem")
       }
     }
-    fetchPosts()
+    fetchFollowing()
     return () => {
       ourRequest.cancel()
     }
@@ -28,11 +27,15 @@ function ProfilePosts() {
   if (isLoading) return <LoadingDotsIcon />
   return (
     <div className="list-group">
-      {posts.map(post => {
-        return <Post post={post} key={post._id} noAuthor={true} />
+      {following.map((user, index) => {
+        return (
+          <Link key={index} to={`/profile/${user.username}`} className="list-group-item list-group-item-action">
+            <img className="avatar-tiny" src={user.avatar} /> {user.username}
+          </Link>
+        )
       })}
     </div>
   )
 }
 
-export default ProfilePosts
+export default ProfileFollowing
