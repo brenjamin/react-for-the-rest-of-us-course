@@ -28,9 +28,10 @@ function ProfilePosts() {
   if (isLoading) return <LoadingDotsIcon />
   return (
     <div className="list-group">
-      {posts.map(post => {
-        return <Post post={post} key={post._id} noAuthor={true} />
-      })}
+      {posts.length &&
+        posts.map(post => {
+          return <Post post={post} key={post._id} noAuthor={true} />
+        })}
     </div>
   )
 }
